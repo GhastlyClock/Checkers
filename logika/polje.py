@@ -73,10 +73,9 @@ class Polje:
             premiki, zastava = self.dobi_veljavne_poteze(figura)
             if premiki:
                 poteze[(figura.vrsta, figura.stolpec)] = (premiki, zastava)
-            if zastava:
+            if zastava and premiki:
                 pomozna_zastava = True
         rezultat = {}
-
         for (key, value) in poteze.items():
             if not(pomozna_zastava) or (pomozna_zastava == value[1]):
                 rezultat[key] = value[0]
@@ -90,18 +89,31 @@ class Polje:
         Output:
             Vse veljavne poteze figure
         '''
-        veljavne_poteze, zastava = self._veljavni_premiki(figura.vrsta, figura.stolpec, figura.igralec)
+        vsi_veljavni_premiki, zastava_gor, zastava_dol = self._veljavni_premiki(figura)
+        
         VP = []
 
         if figura.igralec == Igralec.A or figura.kralj:
             # Veljavni so premiki navzgor (tj. smer = -1)
-            VP += veljavne_poteze.get((-1,1),[]) + veljavne_poteze.get((-1,-1),[])
+            VP += vsi_veljavni_premiki.get((-1,1),[]) + vsi_veljavni_premiki.get((-1,-1),[])
+            zastava = zastava_dol
         if figura.igralec == Igralec.B or figura.kralj:
             # Veljavni so premiki navzdol (tj. smer = 1)
-            VP += veljavne_poteze.get((1,1),[]) + veljavne_poteze.get((1,-1),[])
+            # zastava = zastava_gor if not figura.kralj else zastava_gor or zastava_dol
+            zastava = zastava_gor
+            VP += vsi_veljavni_premiki.get((1,1),[]) + vsi_veljavni_premiki.get((1,-1),[])
+        
+        # rezultat = []
+
+        # for (premik, flag) in VP:
+        #     if not(zastava) or (zastava == flag):
+        #         rezultat.append(premik)
+
+        if figura.kralj:
+            zastava = zastava_dol or zastava_gor
         return (VP, zastava)
     
-    def _veljavni_premiki(self, vrsta, stolpec, igralec):
+    def _veljavni_premiki(self, figura):
         '''
         Input:
             vrsta ... vrsta v kateri se nahaja figura
@@ -115,27 +127,35 @@ class Polje:
         def v_polju(v, s):
             return (v >= 0 and v < ST_VRST) and (s >= 0 and s < ST_STOLPCEV)
 
-        zastava = False
+        zastava_gor = False
+        zastava_dol = False
 
         for smer_vrsta in [1, -1]:
             for smer_stolpec in [1, -1]:
-                nova_vrsta = vrsta + smer_vrsta
-                nov_stolpec = stolpec + smer_stolpec
+                nova_vrsta = figura.vrsta + smer_vrsta
+                nov_stolpec = figura.stolpec + smer_stolpec
                 if v_polju(nova_vrsta, nov_stolpec):
-                    figura = self.polje[nova_vrsta][nov_stolpec]
-                    if not (figura):
+                    polje = self.polje[nova_vrsta][nov_stolpec]
+                    if not (polje):
                         vsi_veljavni_premiki[(smer_vrsta, smer_stolpec)] = ((nova_vrsta, nov_stolpec), False)
-                    elif figura.igralec == igralec.nasprotnik():
+                    elif polje.igralec == figura.igralec.nasprotnik():
                         nova_vrsta += smer_vrsta
                         nov_stolpec += smer_stolpec
                         if v_polju(nova_vrsta, nov_stolpec) and (self.polje[nova_vrsta][nov_stolpec] is None):
-                            zastava = True
+                            if smer_vrsta == 1:
+                                zastava_gor = True
+                            else:
+                                zastava_dol = True
                             vsi_veljavni_premiki[(smer_vrsta, smer_stolpec)] = ((nova_vrsta, nov_stolpec), True)
 
         rezultat = {}
 
-        for (key, value) in vsi_veljavni_premiki.items():
-            if not(zastava) or (zastava == value[1]):
-                rezultat[key] = [value[0]]
+        for (smer_vrsta, smer_stolpec), ((nova_vrsta, nov_stolpec), zastava) in vsi_veljavni_premiki.items():
+            if figura.kralj:
+                nova_zastava = zastava_gor or zastava_dol
+            else:
+                nova_zastava = zastava_gor if smer_vrsta == 1 else zastava_dol
+            if not(nova_zastava) or (nova_zastava == zastava):
+                rezultat[(smer_vrsta, smer_stolpec)] = [(nova_vrsta, nov_stolpec)]
 
-        return (rezultat, zastava)
+        return rezultat, zastava_gor, zastava_dol
