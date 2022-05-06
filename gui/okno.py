@@ -1,6 +1,7 @@
 from logika.polje import ST_STOLPCEV, ST_VRST
 from logika.igralec import Igralec
 import pygame
+from inteligenca.minimax import *
 
 SIRINA, VISINA = 800, 800
 VELIKOST_KVADRATOV = SIRINA//ST_STOLPCEV
@@ -18,6 +19,8 @@ ZELENA = (0, 255, 0)
 KRONA = pygame.transform.scale(pygame.image.load('assets/crown.png'), (44, 25))
 
 FPS = 60
+
+GLOBINA_MINIMAKS = 5
 
 def dobi_vrsto_stolpec_iz_miske(pos):
     x, y = pos
@@ -44,7 +47,12 @@ class Okno:
         
         while run:
             clock.tick(FPS)
-                
+            
+            if self.igra.na_vrsti == Igralec.B:
+                _, koncna_igra = minimax(GLOBINA_MINIMAKS, True, self.igra)
+                self.igra = koncna_igra
+
+
             if self.igra.zmagovalec():
                 print(f"Zmagal je igralec {self.igra.zmagovalec()}!")
                 run = False

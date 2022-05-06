@@ -38,7 +38,7 @@ class Igra:
             if self.polje.premik(self.izbrana_figura, vrsta, stolpec) and self.dobi_dodatne_poteze_figure(self.izbrana_figura):
                 self.poteze_izbrane_figure = self.vse_veljavne_poteze.get((vrsta, stolpec), [])
             else:
-                self._spremeni_igralca()
+                self.spremeni_igralca()
         elif figura and figura.igralec == self.na_vrsti and (figura.vrsta, figura.stolpec) in self.vse_veljavne_poteze.keys():
             self.izbrana_figura = figura
             self.poteze_izbrane_figure = self.vse_veljavne_poteze.get((vrsta, stolpec), [])
@@ -54,7 +54,7 @@ class Igra:
             return True
         return False
 
-    def _spremeni_igralca(self):
+    def spremeni_igralca(self):
         self._odstrani_izbiro()
         self.na_vrsti = self.na_vrsti.nasprotnik()
         self.vse_veljavne_poteze = self.polje.veljavne_poteze_igralca(self.na_vrsti)
