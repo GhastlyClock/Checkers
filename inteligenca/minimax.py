@@ -1,19 +1,22 @@
 from copy import deepcopy
 from logika.igralec import Igralec
 
-def hevristika (igra):
-    return igra.polje.preostalih_B - igra.polje.preostalih_A
+def hevristika (igra, igralec):
+    if igralec == Igralec.B:
+        return igra.polje.preostalih_B - igra.polje.preostalih_A
+    else:
+        return igra.polje.preostalih_A - igra.polje.preostalih_B
 
 
-def minimax(globina, max_igralec, igra):
+def minimax(globina, max_igralec, igra, igralec):
     if globina <= 0 or igra.zmagovalec():
-        return hevristika(igra), igra
+        return hevristika(igra, igralec), igra
     
     if max_igralec:
         maxEval = float('-inf')
         best_move = None
-        for move in get_all_moves(Igralec.B, igra):
-            evaluation = minimax(globina-1, False, move)[0]
+        for move in get_all_moves(igralec, igra):
+            evaluation = minimax(globina-1, False, move, igralec)[0]
             maxEval = max(maxEval, evaluation)
             if maxEval == evaluation:
                 best_move = move
@@ -21,8 +24,8 @@ def minimax(globina, max_igralec, igra):
     else:
         minEval = float('inf')
         best_move = None
-        for move in get_all_moves(Igralec.A, igra):
-            evaluation = minimax(globina-1, True, move)[0]
+        for move in get_all_moves(igralec.nasprotnik(), igra):
+            evaluation = minimax(globina-1, True, move, igralec)[0]
             minEval = min(minEval, evaluation)
             if minEval == evaluation:
                 best_move = move
@@ -45,6 +48,11 @@ def get_all_moves(igralec, igra):
             zacasna_figura = zacasna_igra.izbrana_figura
             if zacasna_figura:
                 nova_igra = simulate_move(premik, zacasna_igra)
-                moves.append(nova_igra)
-    
+                # print(nova_igra)
+                # print(igralec)
+                if nova_igra.na_vrsti == igralec:
+                    poteze = get_all_moves(igralec, nova_igra)
+                    moves.extend(poteze)
+                else:
+                    moves.append(nova_igra)
     return moves
