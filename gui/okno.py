@@ -50,7 +50,7 @@ class Okno:
             clock.tick(FPS)
             
             if self.igra.na_vrsti == Igralec.B:
-                _, koncna_igra = alphabeta(GLOBINA_MINIMAKS, float('-inf'), float('inf'), True, self.igra)
+                _, koncna_igra = minimax(GLOBINA_MINIMAKS, True, self.igra, Igralec.B)
                 self.igra = koncna_igra
 
 
