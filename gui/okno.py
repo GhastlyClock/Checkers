@@ -20,7 +20,7 @@ KRONA = pygame.transform.scale(pygame.image.load('assets/crown.png'), (44, 25))
 
 FPS = 60
 
-GLOBINA_MINIMAKS = 4
+GLOBINA_MINIMAKS = 5
 
 def dobi_vrsto_stolpec_iz_miske(pos):
     x, y = pos
