@@ -3,6 +3,8 @@ from logika.vrstaIgralca import VrstaIgralca
 from inteligenca.minimax import *
 from logika.igra import Igra
 
+GLOBINA_MINIMAKS = 3
+
 class Vodja:
     def __init__(self, okno):
         self.okno = okno
@@ -26,4 +28,3 @@ class Vodja:
         elif poteza:
             self.clovekovaPoteza(poteza)
         return True
-
