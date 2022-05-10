@@ -2,11 +2,8 @@ from logika.polje import ST_STOLPCEV, ST_VRST
 from logika.igralec import Igralec
 import pygame
 from inteligenca.minimax import *
-<<<<<<< HEAD
 from logika.vodja import Vodja
-=======
-from inteligenca.alphabeta import *
->>>>>>> f8f235f29402f772a222344a026a82c4a8f1c66f
+# from multiprocessing import Pool
 
 SIRINA, VISINA = 800, 800
 VELIKOST_KVADRATOV = SIRINA//ST_STOLPCEV
@@ -50,13 +47,15 @@ class Okno:
         run = True
         clock = pygame.time.Clock()
         self.posodobi()
+        # pool = Pool()
         
         while run:
             clock.tick(FPS)
+            # pool.apply_async(self.vodja.igramo())  # Poskus multiproccesinga
             self.vodja.igramo()
 
             if self.vodja.igra.zmagovalec():
-                print(f"Zmagal je igralec {self.igra.zmagovalec()}!")
+                print(f"Zmagal je igralec {self.vodja.igra.zmagovalec()}!")
                 run = False
 
             for event in pygame.event.get():

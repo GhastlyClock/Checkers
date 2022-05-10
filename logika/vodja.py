@@ -14,7 +14,7 @@ class Vodja:
         self.igralecB = self.okno.vrstaIgralcaB
 
     def racunalnikovaPoteza(self):
-        _, koncna_igra = minimax(GLOBINA_MINIMAKS, True, self.igra, Igralec.B)
+        _, koncna_igra = minimax(GLOBINA_MINIMAKS, True, self.igra)
         self.igra = koncna_igra
 
     def clovekovaPoteza(self, poteza):
@@ -25,4 +25,5 @@ class Vodja:
             self.racunalnikovaPoteza()
         elif poteza:
             self.clovekovaPoteza(poteza)
+        return True
 
