@@ -1,6 +1,8 @@
 from copy import deepcopy
 from logika.igralec import Igralec
 
+GLOBINA_MINIMAKS = 5
+
 def hevristika (igra, igralec):
     if igralec == Igralec.B:
         return igra.polje.preostalih_B - igra.polje.preostalih_A
@@ -48,8 +50,6 @@ def get_all_moves(igralec, igra):
             zacasna_figura = zacasna_igra.izbrana_figura
             if zacasna_figura:
                 nova_igra = simulate_move(premik, zacasna_igra)
-                # print(nova_igra)
-                # print(igralec)
                 if nova_igra.na_vrsti == igralec:
                     poteze = get_all_moves(igralec, nova_igra)
                     moves.extend(poteze)

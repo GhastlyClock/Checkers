@@ -2,6 +2,7 @@ from logika.polje import ST_STOLPCEV, ST_VRST
 from logika.igralec import Igralec
 import pygame
 from inteligenca.minimax import *
+from logika.vodja import Vodja
 
 SIRINA, VISINA = 800, 800
 VELIKOST_KVADRATOV = SIRINA//ST_STOLPCEV
@@ -20,7 +21,6 @@ KRONA = pygame.transform.scale(pygame.image.load('assets/crown.png'), (44, 25))
 
 FPS = 60
 
-GLOBINA_MINIMAKS = 5
 
 def dobi_vrsto_stolpec_iz_miske(pos):
     x, y = pos
@@ -34,10 +34,12 @@ def izracunaj_polozaj_figure(figura):
     return (x, y)
 
 class Okno:
-    def __init__(self, igra):
+    def __init__(self, vrstaIgralcaA, vrstaIgralcaB):
         self.okno = pygame.display.set_mode((SIRINA, VISINA))
         pygame.display.set_caption('Checkers')
-        self.igra = igra
+        self.vrstaIgralcaA = vrstaIgralcaA
+        self.vrstaIgralcaB = vrstaIgralcaB
+        self.vodja = Vodja(self)
         self._zazeni()
 
     def _zazeni(self):
@@ -47,13 +49,9 @@ class Okno:
         
         while run:
             clock.tick(FPS)
-            
-            if self.igra.na_vrsti == Igralec.B:
-                _, koncna_igra = minimax(GLOBINA_MINIMAKS, True, self.igra, Igralec.B)
-                self.igra = koncna_igra
+            self.vodja.igramo()
 
-
-            if self.igra.zmagovalec():
+            if self.vodja.igra.zmagovalec():
                 print(f"Zmagal je igralec {self.igra.zmagovalec()}!")
                 run = False
 
@@ -64,7 +62,7 @@ class Okno:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     vrsta, stolpec = dobi_vrsto_stolpec_iz_miske(pos)
-                    self.igra.izberi(vrsta, stolpec)
+                    self.vodja.igramo((vrsta, stolpec))
             self.posodobi()
         pygame.quit()
 
@@ -85,16 +83,16 @@ class Okno:
         
         for row in range(ST_VRST):
             for col in range(ST_STOLPCEV):
-                figura = self.igra.polje.dobi_figuro(row, col)
+                figura = self.vodja.igra.polje.dobi_figuro(row, col)
                 if figura:
                     # Nariši figuro
                     radius = VELIKOST_KVADRATOV//2 - NOTRANJOST_FIGUR
                     BARVA = SIVA
                     # print(self.izbrana_figura)
-                    if self.igra.izbrana_figura and figura.vrsta == self.igra.izbrana_figura.vrsta and figura.stolpec == self.igra.izbrana_figura.stolpec:
+                    if self.vodja.igra.izbrana_figura and figura.vrsta == self.vodja.igra.izbrana_figura.vrsta and figura.stolpec == self.vodja.igra.izbrana_figura.stolpec:
                         # Spremenim barvo da se ve kdo je izbran
                         BARVA = MODRA
-                    elif figura.igralec == self.igra.na_vrsti and (figura.vrsta, figura.stolpec) in self.igra.vse_veljavne_poteze.keys():
+                    elif figura.igralec == self.vodja.igra.na_vrsti and (figura.vrsta, figura.stolpec) in self.vodja.igra.vse_veljavne_poteze.keys():
                         # Spremenim barvo da se ve kdo je na vrsti
                         BARVA = ZELENA
                     figura_x, figura_y = izracunaj_polozaj_figure(figura)
@@ -110,7 +108,7 @@ class Okno:
                         self.okno.blit(KRONA, (figura_x - KRONA.get_width()//2, figura_y - KRONA.get_height()//2))
 
         # Če imamo izbrano polje narišemo še veljavne poteze
-        self.narisi_veljavne_poteze(self.igra.poteze_izbrane_figure)
+        self.narisi_veljavne_poteze(self.vodja.igra.poteze_izbrane_figure)
 
         # Posodobimo prikazno okno
         pygame.display.update()
