@@ -1,6 +1,8 @@
 from copy import deepcopy
 from logika.igralec import Igralec
 
+GLOBINA_MINIMAKS = 5
+
 def hevristika (igra, igralec):
     if igralec == Igralec.B:
         return igra.polje.preostalih_B - igra.polje.preostalih_A
