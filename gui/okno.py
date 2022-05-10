@@ -2,7 +2,11 @@ from logika.polje import ST_STOLPCEV, ST_VRST
 from logika.igralec import Igralec
 import pygame
 from inteligenca.minimax import *
+<<<<<<< HEAD
 from logika.vodja import Vodja
+=======
+from inteligenca.alphabeta import *
+>>>>>>> f8f235f29402f772a222344a026a82c4a8f1c66f
 
 SIRINA, VISINA = 800, 800
 VELIKOST_KVADRATOV = SIRINA//ST_STOLPCEV
