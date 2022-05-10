@@ -3,7 +3,6 @@ from logika.igralec import Igralec
 import pygame
 from inteligenca.minimax import *
 from logika.vodja import Vodja
-# from threading import Thread
 
 SIRINA, VISINA = 800, 800
 VELIKOST_KVADRATOV = SIRINA//ST_STOLPCEV
@@ -50,8 +49,6 @@ class Okno:
         
         while run:
             clock.tick(FPS)
-            # rez =  pool.apply_async(self.vodja.igramo())  # Poskus multiproccesinga
-            # Thread(target=self.vodja.igramo).start()
             self.vodja.igramo()
 
             if self.vodja.igra.zmagovalec():

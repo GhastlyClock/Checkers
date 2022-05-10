@@ -9,6 +9,7 @@ class Polje:
     def __init__(self):
         self.preostalih_A = self.preostalih_B = 12
         self.polje = []
+        self.stevilo_zaporednih_potez_kralja = 0
 
         # Naselji polje z igralci:
         for row in range(ST_VRST):
@@ -33,6 +34,10 @@ class Polje:
         return figure
     
     def premik(self, figura, vrsta, stolpec):
+        if figura.kralj:
+            self.stevilo_zaporednih_potez_kralja += 1
+        else:
+            self.stevilo_zaporednih_potez_kralja = 0
         trenutna_vrsta = figura.vrsta
         trenutni_stolpec = figura.stolpec
 

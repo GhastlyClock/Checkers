@@ -1,5 +1,6 @@
 from logika.polje import Polje
 from logika.igralec import Igralec
+import random
 
 
 class Igra:
@@ -23,6 +24,13 @@ class Igra:
             return Igralec.A
         elif not(self.vse_veljavne_poteze):
             return self.na_vrsti.nasprotnik()
+        elif self.polje.stevilo_zaporednih_potez_kralja > 20:
+            if self.polje.preostalih_A > self.polje.preostalih_B:
+                return Igralec.A
+            elif self.polje.preostalih_B > self.polje.preostalih_A:
+                return Igralec.B
+            else:
+                return Igralec.A if random.getrandbits(1) else Igralec.B
         return None
 
     def _odstrani_izbiro(self):
