@@ -4,7 +4,7 @@ from inteligenca.minimax import *
 from inteligenca.alphabeta import *
 from logika.igra import Igra
 
-GLOBINA_MINIMAKS = 3
+GLOBINA_MINIMAKS = 2
 
 class Vodja:
     def __init__(self, okno):
@@ -17,7 +17,12 @@ class Vodja:
         self.igralecB = self.okno.vrstaIgralcaB
 
     def racunalnikovaPoteza(self):
-        _, koncna_igra = alphabeta(GLOBINA_MINIMAKS, float('-inf'), float('inf'), True, self.igra, self.igra.na_vrsti)
+        # _, koncna_igra = alphabeta(GLOBINA_MINIMAKS, float('-inf'), float('inf'), True, self.igra, self.igra.na_vrsti)
+        _, koncna_igra = minimax(GLOBINA_MINIMAKS, True, self.igra, self.igra.na_vrsti)
+        if self.igra.na_vrsti == Igralec.B:
+            _, koncna_igra = alphabeta(3, float('-inf'), float('inf'), True, self.igra, self.igra.na_vrsti, self.okno.a, self.okno.b, self.okno.c, self.okno.d, self.okno.e)
+        else:
+            _, koncna_igra = alphabeta(3, float('-inf'), float('inf'), True, self.igra, self.igra.na_vrsti, self.okno.a0, self.okno.b0, self.okno.c0, self.okno.d0, self.okno.e0)
         self.igra = koncna_igra
 
     def clovekovaPoteza(self, poteza):

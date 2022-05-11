@@ -3,6 +3,7 @@ from logika.igralec import Igralec
 import pygame
 from inteligenca.minimax import *
 from logika.vodja import Vodja
+import random
 
 SIRINA, VISINA = 800, 800
 VELIKOST_KVADRATOV = SIRINA//ST_STOLPCEV
@@ -46,6 +47,16 @@ class Okno:
         run = True
         clock = pygame.time.Clock()
         self.posodobi()
+        self.a = 18 + random.uniform(-2,2)
+        self.b = 10 + random.uniform(-2,2)
+        self.c = 7 + random.uniform(-2,2)
+        self.d = 3 + random.uniform(-2,2)
+        self.e = 1 + random.uniform(-2,2)
+        print(self.a, self.b, self.c, self.d, self.e)
+        zmage = 0
+        st_iger = 0
+        zmage_A = 0
+        self.a0, self.b0, self.c0, self.d0, self.e0 = 16.18409220562921, 12.717327557066124, 8.674896496996153, 1.0757596026849767, 2.283689252876212
         
         while run:
             clock.tick(FPS)
@@ -53,17 +64,41 @@ class Okno:
 
             if self.vodja.igra.zmagovalec():
                 print(f"Zmagal je igralec {self.vodja.igra.zmagovalec()}!")
-                run = False
+                if self.vodja.igra.zmagovalec() == Igralec.B:
+                    zmage += 1
+                else:
+                    zmage_A += 1
+                if st_iger < 10 and zmage <= 5 and zmage_A <= 5:
+                    print(zmage, st_iger)
+                    st_iger += 1
+                    self.vodja = Vodja(self)
+                else:
+                    if zmage > 5:
+                        self.a0, self.b0, self.c0, self.d0, self.e0 = self.a, self.b, self.c, self.d, self.e
+                        print(self.a0, self.b0, self.c0, self.d0, self.e0)
+                        print(zmage)
+                    
+                    
+                    self.a = self.a0 + random.uniform(-2,2)
+                    self.b = self.b0 + random.uniform(-2,2)
+                    self.c = self.c0 + random.uniform(-2,2)
+                    self.d = self.d0 + random.uniform(-2,2)
+                    self.e = self.e0 + random.uniform(-2,2)
+                    self.vodja = Vodja(self)
+                    zmage = 0
+                    zmage_A = 0
+                    st_iger = 0
+                    
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    print(self.a0, self.b0, self.c0, self.d0, self.e0)
                     run = False
-                    
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     vrsta, stolpec = dobi_vrsto_stolpec_iz_miske(pos)
-                    self.vodja.igramo((vrsta, stolpec))
+                    self.vodja.igramo(self.a, self.b, self.c, self.d, self.e, (vrsta, stolpec))
             self.posodobi()
         pygame.quit()
 

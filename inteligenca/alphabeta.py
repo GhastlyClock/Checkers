@@ -1,22 +1,28 @@
 from copy import deepcopy
 from inteligenca.simulacijaPremikov import *
 from inteligenca.hevristika import *
+import random
 
-
-def alphabeta(globina, alpha, beta, max_igralec, igra, igralec):
+def alphabeta(globina, alpha, beta, max_igralec, igra, igralec, a, b, c, d, e):
     if globina <= 0 or igra.zmagovalec():
-        return hevristika(igra, igralec), igra
+        return hevristika1(igra, igralec, a, b, c, d, e), igra
+        # if igralec == Igralec.B:
+        #     return hevristika(igra, igralec), igra
+        # else:
+        #     return hevristika1(igra, igralec), igra
     
     if max_igralec:
         maxEval = PORAZ
         najboljse_stanje = None
         vsi_premiki = generiraj_vse_premike(igra)
         for stanje in vsi_premiki:
-            evaluation = alphabeta(globina-1, alpha, beta, False, stanje, igralec)[0]
-            maxEval = max(evaluation, maxEval)
-            if maxEval == evaluation:
+            evaluation = alphabeta(globina-1, alpha, beta, False, stanje, igralec, a, b, c, d, e)[0]
+            if evaluation == maxEval and random.getrandbits(1):
                 najboljse_stanje = stanje
-            if beta <= maxEval:
+            elif evaluation > maxEval:
+                maxEval = evaluation
+                najboljse_stanje = stanje
+            if beta <= maxEval: # To poglej zakaj ne dela prou brez najboljse_stanje
                 break
             alpha = max(alpha, maxEval)
         return maxEval, najboljse_stanje
@@ -25,11 +31,13 @@ def alphabeta(globina, alpha, beta, max_igralec, igra, igralec):
         najboljse_stanje = None
         vsi_premiki = generiraj_vse_premike(igra)
         for stanje in vsi_premiki:
-            evaluation = alphabeta(globina-1, alpha, beta, True, stanje, igralec)[0]
-            minEval = min(evaluation, minEval)
-            if minEval == evaluation:
+            evaluation = alphabeta(globina-1, alpha, beta, True, stanje, igralec, a, b, c, d, e)[0]
+            if evaluation == minEval and random.getrandbits(1):
                 najboljse_stanje = stanje
-            if alpha >= minEval:
+            elif evaluation < minEval:
+                minEval = evaluation
+                najboljse_stanje = stanje
+            if alpha >= minEval: # To poglej zakaj ne dela prou brez najboljse_stanje
                 break
             beta = min(beta, minEval)
         return minEval, najboljse_stanje
