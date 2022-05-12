@@ -1,6 +1,7 @@
 from logika.polje import Polje
 from logika.igralec import Igralec
 import random
+from inteligenca.hevristika import preberi_podatke
 
 
 class Igra:
@@ -30,7 +31,13 @@ class Igra:
             elif self.polje.preostalih_B > self.polje.preostalih_A:
                 return Igralec.B
             else:
-                return Igralec.A if random.getrandbits(1) else Igralec.B
+                stevilo_kraljev_A, stevilo_kraljev_B, _, _, _, _ = preberi_podatke(self)
+                if stevilo_kraljev_A > stevilo_kraljev_B:
+                    return Igralec.A
+                elif stevilo_kraljev_A < stevilo_kraljev_B:
+                    return Igralec.B
+                else:
+                    return self.na_vrsti  # V tem primeru zgubi tisti, ki je zadni na vrsti
         return None
 
     def _odstrani_izbiro(self):

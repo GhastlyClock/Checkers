@@ -1,11 +1,10 @@
-from copy import deepcopy
 from inteligenca.simulacijaPremikov import *
 from inteligenca.hevristika import *
 import random
 
-def alphabeta(globina, alpha, beta, max_igralec, igra, igralec, a, b, c, d, e):
+def alphabeta(globina, alpha, beta, max_igralec, igra, igralec):
     if globina <= 0 or igra.zmagovalec():
-        return hevristika1(igra, igralec, a, b, c, d, e), igra
+        return hevristika1(igra, igralec), igra
         # if igralec == Igralec.B:
         #     return hevristika(igra, igralec), igra
         # else:
@@ -16,7 +15,7 @@ def alphabeta(globina, alpha, beta, max_igralec, igra, igralec, a, b, c, d, e):
         najboljse_stanje = None
         vsi_premiki = generiraj_vse_premike(igra)
         for stanje in vsi_premiki:
-            evaluation = alphabeta(globina-1, alpha, beta, False, stanje, igralec, a, b, c, d, e)[0]
+            evaluation = alphabeta(globina-1, alpha, beta, False, stanje, igralec)[0]
             if evaluation == maxEval and random.getrandbits(1):
                 najboljse_stanje = stanje
             elif evaluation > maxEval:
@@ -31,7 +30,7 @@ def alphabeta(globina, alpha, beta, max_igralec, igra, igralec, a, b, c, d, e):
         najboljse_stanje = None
         vsi_premiki = generiraj_vse_premike(igra)
         for stanje in vsi_premiki:
-            evaluation = alphabeta(globina-1, alpha, beta, True, stanje, igralec, a, b, c, d, e)[0]
+            evaluation = alphabeta(globina-1, alpha, beta, True, stanje, igralec)[0]
             if evaluation == minEval and random.getrandbits(1):
                 najboljse_stanje = stanje
             elif evaluation < minEval:

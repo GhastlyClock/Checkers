@@ -18,7 +18,7 @@ def hevristika (igra, igralec):
         return igra.polje.preostalih_A - igra.polje.preostalih_B
 
 
-def hevristika1 (igra, igralec, a, b, c, d, e):
+def hevristika1 (igra, igralec):
     zmagovalec = igra.zmagovalec()
     if zmagovalec:
         if zmagovalec == igralec:
@@ -26,11 +26,10 @@ def hevristika1 (igra, igralec, a, b, c, d, e):
         else:
             return -1000000000
     stevilo_kraljev_A, stevilo_kraljev_B, stevilo_figur_zadnja_vrsta_A, stevilo_figur_zadnja_vrsta_B, stevilo_figur_sredina_A, stevilo_figur_sredina_B = preberi_podatke(igra)
-    # utez_stevilo_zadnja_vrsta = 1/48 * (igra.polje.preostalih_A + igra.polje.preostalih_B)
     if igralec == Igralec.B:
-        return a * (igra.polje.preostalih_B - igra.polje.preostalih_A) + b * igra.polje.preostalih_B + c * (stevilo_kraljev_B - stevilo_kraljev_A) + d * stevilo_figur_zadnja_vrsta_B + e * stevilo_figur_sredina_B
+        return 17 * (igra.polje.preostalih_B - igra.polje.preostalih_A) + 13 * igra.polje.preostalih_B + 6 * (stevilo_kraljev_B - stevilo_kraljev_A) + 3 * stevilo_figur_zadnja_vrsta_B + 1 * stevilo_figur_sredina_B
     else:
-        return a * (igra.polje.preostalih_A - igra.polje.preostalih_B) + b * igra.polje.preostalih_A + c * (stevilo_kraljev_A - stevilo_kraljev_B) + d * stevilo_figur_zadnja_vrsta_A + e * stevilo_figur_sredina_A
+        return 17 * (igra.polje.preostalih_A - igra.polje.preostalih_B) + 13 * igra.polje.preostalih_A + 6 * (stevilo_kraljev_A - stevilo_kraljev_B) + 3 * stevilo_figur_zadnja_vrsta_A + 1 * stevilo_figur_sredina_A
 
 
 def preberi_podatke(igra):
